@@ -1,0 +1,32 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+<a class="carousel-control-prev" href="#carouselExample" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+</a>
+<tr *ngFor="let item of itemsList" style="">
+    
+    <td id="carouselExample" class="carousel slide" data-ride="carousel" data-interval="9000">
+        <div class="carousel-inner row w-100 mx-auto" role="listbox">
+            <div class="carousel-item col-md-7  active">
+               <div class="panel panel-default">
+                  <div class="panel-thumbnail">
+                    <a href="#" title="{{item.description}}" class="thumb">
+                      <img class="img-fluid mx-auto d-block" src="{{item.imageUrl}}" alt="{{item.description}}">
+                    </a>
+                    <div>{{item.shortDesc}}</div>  
+                    <div>$ {{item.unitCost}}</div>  
+                  </div>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+<a class="carousel-control-next text-faded" href="#carouselExample" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+</a>
