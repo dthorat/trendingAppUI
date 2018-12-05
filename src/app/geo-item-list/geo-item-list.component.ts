@@ -2,42 +2,58 @@ import { Component,OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Router} from '@angular/router';
 import { map } from 'rxjs/operators';
+import { } from 'googlemaps';
 
 @Component({
-  selector: 'app-items',
+  selector: 'app-geo-items',
   templateUrl: './geo-item-list.component.html',
   styleUrls: ['./geo-item-list.component.scss']
 })
 export class GeoItemListComponent implements OnInit {
-  title = 'trendingApp-UI';
+
+  title = 'Geographical Location wise Item Details';
   public itemsList : any;
   public item: any;
-  
+  public google: any;
   public imagesUrl;
-  public restItemsUrl = 'http://localhost:9080/trending';
-  public restItemUrl = 'http://localhost:9080//item/';
+  public zipCode = '411014' ;
+  public restItemsUrl = 'http://localhost:9080/trending/geolocation/items/';
+  public restItemUrl = 'http://localhost:9080/item/';
 
   constructor(private http: HttpClient,private router: Router) {}
  
     ngOnInit() {
-    
-        this.getTrendingItems();
-        this.imagesUrl = [
-          'http://www.telegraph.co.uk/content/dam/motoring2/2015/12/07/01-Kia-Sportage-front-xlarge_trans_NvBQzQNjv4BqrWYeUU_H0zBKyvljOo6zlkYMapKPjdhyLnv9ax6_too.jpg',
-          'http://www.telegraph.co.uk/cars/images/2017/01/24/A5-Sportback-main-xlarge_trans_NvBQzQNjv4BqZR6q1BRVjLLZ5nciTmZ6ABYYy2HF4Csw_oYIEcbI_AA.jpg',
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXPopqXeuO7fqot51N7vaZuh9EqBYgZkLexcmQ_A0Fy0CjjW6J',
-          'https://www.cars.co.za/carimages_gen/Audi-TT/Audi-TT-coupe-1.8TFSI_AudiTT3c6l.jpg',
-          'http://comicsalliance.com/files/2011/04/strips02.jpg',
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSq4HTtZrfKqNo5riVYiOBBL7-9laaPZcW1RfDfYGvb6BezfMtQ',
-          'https://s-media-cache-ak0.pinimg.com/originals/73/f3/08/73f30861d214eea1d6c5d99fe72b3053.jpg',
-          'https://bmj2k.files.wordpress.com/2011/04/heroes.jpg'
-        ];
+    	this.getTrendingItems('411014');
+    	/*
+    	window.navigator.geolocation.getCurrentPosition(position => {
+                
+            var pos =  {
+            	lat: position.coords.latitude,
+             	lng: position.coords.longitude
+           	};
+            
+		    let geocoder = new google.maps.Geocoder();
+
+		    geocoder.geocode({'location': pos}, (results, status) => {
+		      if (status == google.maps.GeocoderStatus.OK) {
+		        let result = results[0];
+		        let rsltAdrComponent = result.address_components;
+		        let resultLength = rsltAdrComponent.length;
+		        if (result != null) {
+		          let postalCode = rsltAdrComponent[resultLength-1].long_name;
+		          this.getTrendingItems(postalCode);
+		        } else {
+		          alert("No address available!");
+		        }
+		      }
+		    });
+		});  */  
     }    
    
 
   // Read all Trending Items
-  getTrendingItems(): void {
-    this.restItemsServiceGetTrendingItems()
+  getTrendingItems(postalCode: string): void {
+    this.restItemsServiceGetTrendingItems(postalCode)
       .subscribe(
         restItems => {
           this.itemsList = restItems;
@@ -47,22 +63,10 @@ export class GeoItemListComponent implements OnInit {
   }
   
   // Rest Items Service: Read all Trending Items
-  restItemsServiceGetTrendingItems() {
+  restItemsServiceGetTrendingItems(postalCode: string) {
     return this.http
-      .get<any[]>(this.restItemsUrl)
+      .get<any[]>(this.restItemsUrl+postalCode)
       .pipe(map(data => data));
   
-  }
-  
-  redirectToTrendingItem(itemKey: string) {
-	  this.router.navigate(['/item/'+itemKey]);
-	}
-	
-	gotoHeroes() {
-	    //let heroId = hero ? hero.id : null;
-	    // Pass along the hero id if available
-	    // so that the HeroList component can select that hero.
-	    // Include a junk 'foo' property for fun.
-	    this.router.navigate(['/item', { id: 'KEY-004'}]);
-	  }
+  }  
 }
